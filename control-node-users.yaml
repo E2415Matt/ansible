@@ -1,0 +1,20 @@
+# this file to list all active users
+# these will be used by playbook to add users to new instances
+# credentials to be eventually migrated to vault for safe keeping once proof of concept completed
+#
+---
+- hosts: "localhost"
+  connection: "local"
+  vars:
+    users:
+    - hcokakoglu
+    - fsari
+    - maltun
+    - msahin
+    - serdem
+  tasks:
+  - name: "Create user accounts and add users to groups"
+    user:
+      name: "{{ item }}"
+      groups: "devops"
+    with_items: "{{ users }}"

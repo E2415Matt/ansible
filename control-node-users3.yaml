@@ -1,0 +1,30 @@
+---
+- hosts: "localhost"
+  connection: "local"
+  vars:
+    users:
+    - username: "hcokakog"
+      groups: "devops"
+    - username: "fsari"
+      groups: "devops"
+    - username: "serdem"
+      groups: "devops"
+    remove_users:
+    - "msahin"
+    - "maltun"
+  tasks:
+  - name: "create user accounts & add them to groups"
+    user:
+      name: "{{ item.username }}"
+      groups: "{{ item.groups }}"
+    with_items: "{{ users }}"
+  - name: "remove old users"
+    user:
+      name: "{{ item }}"
+      state: "absent"
+    with_items: "{{ remove_users }}"
+  - name: "add authorized keys"
+    authorized_key:
+      user: "{{ item.username }}"
+      key: "{{ lookup('file', 'files/' + item.username + '.key.pub') }}"
+    with_items: "{{ users }}"
